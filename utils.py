@@ -68,3 +68,20 @@ def group_by(items, key_fn):
 
 def concat_lists(lists):
     return reduce(add, lists, [])
+
+
+def get_chars(obj, only_char=False):
+    def iterate_over(it, only_char):
+        for row, line in enumerate(it):
+            line = line.strip()
+            for column, char in enumerate(line):
+                if only_char:
+                    yield char
+                else:
+                    yield (char, row, column)
+
+    if hasattr(obj, "read") or isinstance(obj, list):
+        yield from iterate_over(obj, only_char)
+    else:
+        with open(obj) as f:
+            yield from iterate_over(f, only_char)
