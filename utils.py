@@ -5,7 +5,7 @@ from enum import IntEnum
 from functools import reduce
 from itertools import zip_longest
 from operator import add
-from typing import List
+from typing import List, Union
 
 
 class ScanOutcome(IntEnum):
@@ -143,7 +143,7 @@ def get_chars(obj, only_char=False):
             yield from iterate_over(f, only_char)
 
 
-def scan_rows(numeric_nested_list: List[List[int|float]]) -> ScanOutcome:
+def scan_rows(numeric_nested_list: List[List[Union[int, float]]]) -> ScanOutcome:
     sizes = []
     largest, lowest = -1, sys.maxsize
     for row in numeric_nested_list:
