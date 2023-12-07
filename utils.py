@@ -4,6 +4,7 @@ from collections import defaultdict
 from enum import IntEnum
 from functools import reduce
 from itertools import zip_longest
+from multiprocessing import Pool, cpu_count
 from operator import add
 from typing import List, Union
 
@@ -13,6 +14,13 @@ class ScanOutcome(IntEnum):
     ROWS_JAGGED = 1
     ROWS_EMPTY = 2
     ROWS_1D_EMPTY = 3
+
+
+def get_lines_from_file(file_obj):
+    for line in file_obj:
+            line = line.strip()
+            if line:
+                yield line
 
 
 def get_lines(filename):
@@ -274,6 +282,20 @@ def without_digits(string):
     return "".join(c for c in string if not c.isdigit())
 
 
+def is_prime(n):
+    if n <= 1:
+        return False
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0:
+            return False
+    return True
+
+
+def compute(computation, *args):
+    with Pool(processes=cpu_count()) as pool:
+        return pool.starmap(computation, *args)
+
+
 """
 for line in get_lines_with_hooks(
     "input/01.txt",
@@ -282,4 +304,11 @@ for line in get_lines_with_hooks(
     postprocess=without_digits,
 ):
     print(line)
+"""
+
+
+"""
+def fn(a, b):
+    return f"{a} & {b}"
+print(compute(fn, [("a", "b"), ("c", "d")]))
 """
